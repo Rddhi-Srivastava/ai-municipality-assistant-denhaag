@@ -1,0 +1,30 @@
+SOURCE_TITLE: Waste tax
+SOURCE_URL: https://www.denhaag.nl/en/taxes/waste-tax/
+CATEGORY: Taxes
+
+Every household in The Hague pays the waste tax (afvalstoffenheffing). This tax covers collecting and processing household waste. Companies do not pay the waste tax; they arrange removal of their own company waste.
+
+Who it is for: The user (occupant) of a property pays the waste tax.
+
+How it works:
+The municipality determines the amount using the Personal Records Database (BRP), based on how many people are registered at your address on 1 January. There are fixed rates depending on household size; it does not matter how much rubbish you actually throw away. The waste tax appears on the annual assessment notice for municipal taxes. If you moved into the property partway through the year, you get an assessment covering only the months from your move to December.
+
+Paying waste tax:
+Pay within 6 weeks of the due date shown on the assessment. You can pay via iDEAL/bank transfer, or in instalments by direct debit. If you are unable to pay, you can apply for a tax payment plan or a tax waiver.
+
+Fees (annual rates):
+- 1 person household: €412.56
+- 2 people household: €463.80
+- 3 or more people household: €507.48
+
+Good to know:
+- Disagree with the amount? You can contest (object to) the assessment within 6 weeks.
+- Moving within the municipality? Report your move; you will get a new assessment for your new address.
+- Moving to another municipality, or moving in with someone else? You can request a refund (ontheffing), paying only for the months you were registered at the property. Refunds apply if the whole household moves out or the sole occupant dies.
+- Someone moving in or out during the year, or a household member dying, does NOT change the amount owed that year; changes are only processed in the following year's assessment.
+- Refund requests can be made online via MijnDenHaag (DigiD) or by post to: Directeur gemeentebelastingen, Postbus 19924, 2500 CX Den Haag. You will get an answer within 8 weeks.
+- Paying late results in a formal warning letter requesting payment.
+
+Rules and regulations: The waste tax is governed by the Waste Tax Directive for The Hague (available on overheid.nl, in Dutch).
+
+Contact: Municipal Tax Department, via denhaag.nl.

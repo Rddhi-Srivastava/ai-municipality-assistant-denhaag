@@ -1,0 +1,42 @@
+SOURCE_TITLE: Apply for or renew parking permit for residents
+SOURCE_URL: https://www.denhaag.nl/en/parking/apply-for-parking-permit-for-residents/
+CATEGORY: Parking
+
+Do you live in an area with paid parking? If you have a parking permit, you do not have to pay each time. This page explains how to apply for or renew a resident parking permit.
+
+Conditions:
+- You live in The Hague and are registered at the address where you want the resident parking permit.
+- You own a car or microcar.
+- You do not live in Palaceplein, Binckhorst, Energiekwartier or CS-Oost / Grotiusplaats (permits are not given in these areas; they are car-free or easily reached by public transport/cycling).
+- You live in a building that allows resident parking permits (new residential buildings often do not allow this).
+- You cannot park on your own property. If you have private parking, you cannot get a permit.
+- You can get up to 3 resident parking permits per address.
+
+Needed to apply:
+- The number plate of your car.
+- Your bank account number (IBAN).
+- For applications without DigiD: your citizen service number (BSN).
+- Extra documents in specific cases: a lease contract for a lease car; a signed employer letter for a company car (stating you need the car for work at least 3 months, the number plate, and the usage period); a copy of registration papers for a car with a foreign number plate.
+
+How to apply:
+Enter your postal code and house number online to see how you can apply for or renew the permit; an application button then appears.
+
+Fees:
+- Application fee: €17.70
+- Permit for 1st car: €99.20 per year
+- Permit for 2nd car: €346.65 per year
+- Permit for 3rd car: €693.25 per year
+Note: if applying partway through a permit period, you only pay for the remaining time; if that period is shorter than 2 months, you also pay for the next permit year right away.
+
+How long it takes:
+- Online with iDEAL: permit can start right away.
+- Online by direct debit or invoice: at least 10 working days.
+- By post with direct debit: at least 5 working days.
+- By post by invoice: at least 10 working days.
+
+Frequently asked questions:
+- How long is my permit valid? Depends on the neighbourhood. Example validity periods: 1 Feb-31 Jan (Laakkwartier, Laakhaven, Rustenburg-Oostbroek, Valkenboskwartier); 1 Mar-end Feb (Centrum, Centrum-Zuid, Scheveningen/Duindorp); 1 Apr-31 Mar (Archipel/Zorgvliet, Vogelwijk-Noord, Benoordenhout, Bezuidenhout); 1 Jul-30 Jun (Bomenbuurt/Regentessekwartier, Moerwijk Noord-Oost, Leyenburg); 1 Oct-30 Sep (Geuzen- en Statenkwartier/Duinoord, Heesterbuurt, Noten-Vruchtenbuurt-Bloemenbuurt); 1 Nov-31 Oct (De Venen, Leyweg shopping area, Morgenstond, Transvaal); 1 Dec-30 Nov (Binckhorst).
+- I have a disability, can I still apply? Yes, see the separate disabled resident's parking permit, valid in all paid parking spaces in The Hague.
+- Why am I unable to apply? Possible reasons: you don't meet the conditions, you still owe payment on an old permit, you can park on your own property, or you live in an area where permits aren't issued.
+
+Also see: Cancel your parking permit, Change the number plate on your parking permit, Apply for parking permit for car sharing.
