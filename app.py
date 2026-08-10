@@ -33,7 +33,7 @@ if not os.path.isdir(CHROMA_DIR) or not os.listdir(CHROMA_DIR):
             st.error("Failed to build the document index. See details below.")
             st.code(result.stdout + "\n" + result.stderr)
             st.stop()
-            
+
 st.title("🏛️ Den Haag Municipality Assistant")
 st.caption(
     "Ask about moving/address registration, parking permits, passports, "
@@ -44,13 +44,22 @@ st.caption(
 
 with st.sidebar:
     st.header("Settings")
-    default_key = os.environ.get("GROQ_API_KEY", "")
-    api_key = st.text_input(
-        "Groq API key",
-        value=default_key,
-        type="password",
-        help="Get a free key at console.groq.com. Not stored anywhere.",
-    )
+    configured_key = os.environ.get("GROQ_API_KEY", "")
+
+    if configured_key:
+        # A key is already set via Streamlit secrets / environment. Never
+        # render it into a widget's value — Streamlit's password inputs have
+        # a visible "reveal" eye icon, so a pre-filled real secret could be
+        # read by anyone visiting the public app.
+        api_key = configured_key
+        st.success("Groq API key is configured.")
+    else:
+        api_key = st.text_input(
+            "Groq API key",
+            value="",
+            type="password",
+            help="Get a free key at console.groq.com. Not stored anywhere.",
+        )
     st.markdown("---")
     st.markdown(
         "**Scope of this demo:** a small set of Den Haag municipality pages "
