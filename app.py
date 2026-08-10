@@ -9,8 +9,8 @@ Requires:
     - a Groq API key, either as the GROQ_API_KEY environment variable or
       entered in the sidebar (also works with Streamlit secrets when deployed)
 """
-
 import os
+import sys
 import subprocess
 import streamlit as st
 from rag import answer_question, CHROMA_DIR
@@ -20,10 +20,20 @@ st.set_page_config(page_title="Den Haag Municipality Assistant", page_icon="🏛
 # On a fresh deployment (e.g. Streamlit Community Cloud), data/chroma/ won't
 # exist yet since it's a build artifact and is gitignored. Build it once on
 # first launch so the app is usable without a manual ingest step.
+# Use sys.executable (not a bare "python") so the ingest script runs inside
+# the same virtual environment as the Streamlit app itself — otherwise the
+# subprocess can resolve to a different Python install that lacks chromadb.
 if not os.path.isdir(CHROMA_DIR) or not os.listdir(CHROMA_DIR):
     with st.spinner("First-time setup: building the document index..."):
-        subprocess.run(["python", os.path.join(os.path.dirname(__file__), "ingest.py")], check=True)
-
+        result = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(__file__), "ingest.py")],
+            capture_output=True, text=True,
+        )
+        if result.returncode != 0:
+            st.error("Failed to build the document index. See details below.")
+            st.code(result.stdout + "\n" + result.stderr)
+            st.stop()
+            
 st.title("🏛️ Den Haag Municipality Assistant")
 st.caption(
     "Ask about moving/address registration, parking permits, passports, "
