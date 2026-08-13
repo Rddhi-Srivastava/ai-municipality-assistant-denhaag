@@ -1,5 +1,5 @@
 """
-rag.py — Core retrieval-augmented generation logic for the AI Municipality
+rag.py: Core retrieval-augmented generation logic for the AI Municipality
 Assistant (Den Haag).
 
 Pipeline:
@@ -10,7 +10,7 @@ Pipeline:
              -> if not confident: decline and point to denhaag.nl directly
              -> always return the answer plus the exact source chunks used
 
-This module has no UI code — app.py (Streamlit) imports it.
+This module has no UI code. app.py (Streamlit) imports it.
 """
 
 import os
@@ -25,7 +25,7 @@ TOP_K = 4
 
 # Cosine DISTANCE from Chroma (0 = identical, 2 = opposite). Below this
 # threshold on the best-matching chunk, we trust the retrieval enough to
-# let the LLM attempt an answer. This is a simple, uncalibrated heuristic —
+# let the LLM attempt an answer. This is a simple, uncalibrated heuristic,
 # see README "Limitations" for why that matters.
 DISTANCE_THRESHOLD = 0.75
 
@@ -33,18 +33,18 @@ GROQ_MODEL = "llama-3.3-70b-versatile"
 
 SYSTEM_PROMPT = """You are the AI Municipality Assistant for the city of Den Haag (The Hague).
 
-STRICT RULES — follow these exactly:
+STRICT RULES (follow these exactly):
 1. Answer ONLY using the CONTEXT provided below. Do not use any outside knowledge,
    even if you believe you know the answer.
 2. If the CONTEXT does not contain enough information to answer the question,
-   respond with exactly: "I don't know — please check denhaag.nl directly or
+   respond with exactly: "I don't know, please check denhaag.nl directly or
    contact the municipality." Do not guess, and do not fill gaps with
    general knowledge about the Netherlands or other municipalities.
 3. Never invent deadlines, fees, phone numbers, or procedures that are not
    explicitly stated in the CONTEXT.
-4. Keep answers concise and practical — a resident should be able to act on
+4. Keep answers concise and practical. A resident should be able to act on
    your answer immediately.
-5. When you do answer, do not mention "the context" or "the documents" —
+5. When you do answer, do not mention "the context" or "the documents";
    answer naturally, as the municipality would."""
 
 
@@ -114,7 +114,7 @@ def answer_question(question, groq_api_key=None):
 
     if not chunks:
         return {
-            "answer": "I don't know — please check denhaag.nl directly or contact the municipality.",
+            "answer": "I don't know, please check denhaag.nl directly or contact the municipality.",
             "declined": True,
             "sources": [],
             "best_distance": None,
@@ -134,7 +134,7 @@ def answer_question(question, groq_api_key=None):
     if best_distance > DISTANCE_THRESHOLD:
         return {
             "answer": (
-                "I don't know — this doesn't look like it's covered in my "
+                "I don't know. This doesn't look like it's covered in my "
                 "current documents. Please check denhaag.nl directly or "
                 "contact the municipality (tel. 14070)."
             ),

@@ -1,5 +1,5 @@
 """
-ingest.py — Loads documents from data/raw/, chunks them, embeds each chunk
+ingest.py: Loads documents from data/raw/, chunks them, embeds each chunk
 with a local MiniLM model (via ChromaDB's built-in ONNX embedding function,
 so no separate PyTorch install is needed), and stores everything in a
 persistent local ChromaDB collection.
@@ -112,7 +112,7 @@ def main():
 
         chunks = chunk_text(body)
         fname = os.path.basename(path)
-        print(f"  {fname}: {len(chunks)} chunk(s) — {meta.get('source_title')}")
+        print(f"  {fname}: {len(chunks)} chunk(s), {meta.get('source_title')}")
 
         for i, chunk in enumerate(chunks):
             all_ids.append(f"{fname}::chunk{i}")

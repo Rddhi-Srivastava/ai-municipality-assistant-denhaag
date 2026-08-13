@@ -1,7 +1,7 @@
-# AI Municipality Assistant — Den Haag
+# AI Municipality Assistant for Den Haag
 
 A retrieval-augmented (RAG) chat assistant that answers resident and staff
-questions using only official Den Haag municipality documents — and says
+questions using only official Den Haag municipality documents, and says
 "I don't know" rather than guessing when a question falls outside what it's
 been given.
 
@@ -12,12 +12,12 @@ been given.
 ## Business problem
 
 Residents and municipal staff have to dig through scattered policy pages
-and FAQ documents to find accurate answers — and generic chatbots that rely
+and FAQ documents to find accurate answers. Generic chatbots that rely
 on general knowledge will confidently hallucinate on official information,
 which is a real risk when the answer involves a legal deadline (e.g. "report
 your move within 5 days") or a specific fee. This project builds a narrow,
 grounded assistant that only answers from a defined set of ingested
-documents, and explicitly declines when it doesn't know — trading
+documents, and explicitly declines when it doesn't know, trading
 completeness for trustworthiness.
 
 ## Target users
@@ -27,19 +27,19 @@ completeness for trustworthiness.
 - **Municipal staff**, who could use the same tool as a first-line lookup
   aid instead of manually searching policy pages.
 - The same architecture doubles as a pitch for an internal "knowledge bot"
-  for organisations like TNO, Capgemini, Accenture, or Deloitte — any
+  for organisations like TNO, Capgemini, Accenture, or Deloitte: any
   setting with a large, scattered internal document set and a low tolerance
   for wrong answers.
 
 ## Assumptions & scope
 
-- Answers are generated **only** from the ingested documents — never from
+- Answers are generated **only** from the ingested documents, never from
   the LLM's general knowledge.
 - English only for v1 (Dutch is a planned extension, see Future
   improvements).
 - The document set is a small, manually curated sample of denhaag.nl pages
   (moving/address registration, parking permits, passports, bulky waste
-  collection, waste tax) — **not** a live crawl of the full municipality
+  collection, waste tax), **not** a live crawl of the full municipality
   site.
 - This is a portfolio demo only: no authentication, no connection to real
   citizen data or municipal systems, and no legal or financial advice
@@ -51,7 +51,7 @@ completeness for trustworthiness.
 |---|---|---|
 | Embeddings | `all-MiniLM-L6-v2` (via ChromaDB's built-in ONNX runtime) | Free, runs fully locally, no GPU needed, avoids a heavyweight PyTorch install |
 | Vector store | ChromaDB (persistent local client) | Free, zero-infrastructure, trivial to set up for a demo-scale corpus |
-| LLM | Groq (Llama 3.3 70B) | Free tier, very low latency — good for a live demo |
+| LLM | Groq (Llama 3.3 70B) | Free tier, very low latency, good for a live demo |
 | UI | Streamlit | Fastest path to a shareable, public chat interface |
 | Orchestration | Plain Python (no LangChain/LlamaIndex) | At this scale (~5 documents, one retrieval step) a framework adds indirection without adding capability; hand-rolled code keeps the confidence-threshold logic fully visible and easy to explain |
 
@@ -81,10 +81,10 @@ implementation.
 > in special cases at a municipal counter. You'll need proof of your new
 > address, such as your rental contract or purchase deed. Online reports
 > are processed within 5 working days.
-> **Source:** *Report your move* — denhaag.nl/en/moving-and-immigration/report-your-move/
+> **Source:** *Report your move*, denhaag.nl/en/moving-and-immigration/report-your-move/
 
 > **Q: What's the best neighbourhood in Den Haag for families?** *(out of scope)*
-> **A:** I don't know — this doesn't look like it's covered in my current
+> **A:** I don't know. This doesn't look like it's covered in my current
 > documents. Please check denhaag.nl directly or contact the municipality
 > (tel. 14070).
 
@@ -95,23 +95,29 @@ grounding rule:
 
 > "Answer ONLY using the CONTEXT provided below... If the CONTEXT does not
 > contain enough information to answer the question, respond with exactly:
-> 'I don't know — please check denhaag.nl directly or contact the
+> 'I don't know, please check denhaag.nl directly or contact the
 > municipality.' Do not guess, and do not fill gaps with general knowledge."
 
 This is paired with a **similarity-distance threshold** applied *before*
 the LLM is even called: if the best-matching chunk is too dissimilar to the
-question, the pipeline declines immediately without spending an LLM call —
+question, the pipeline declines immediately without spending an LLM call:
 a second, independent line of defence against hallucination on top of the
 prompt instruction. See `rag.py::SYSTEM_PROMPT` and `DISTANCE_THRESHOLD`.
 
 ## Evaluation & testing
 
-15 test questions — 10 answerable from the ingested documents, 5
-deliberately out of scope — are defined in `eval/questions.md` and run
+15 test questions (10 answerable from the ingested documents, 5
+deliberately out of scope) are defined in `eval/questions.md` and run
 automatically by `eval/run_eval.py`. A documented, non-zero "I don't know"
 rate on the out-of-scope set is treated as a *good* result, not a weakness:
 it's evidence the grounding is working rather than the model quietly
 filling gaps with plausible-sounding general knowledge.
+
+**Result: 15/15 (100%).** 10/10 in-scope questions answered correctly, 5/5
+out-of-scope questions correctly declined, 0 hallucinated facts observed.
+Full per-question distances and a discussion of *why* the two hallucination
+defenses (similarity threshold + prompt instruction) each caught different
+out-of-scope questions are in `eval/questions.md`.
 
 Run it yourself:
 ```bash
@@ -122,15 +128,25 @@ python eval/run_eval.py
 
 ## Limitations
 
-- Small, manually curated document set (5 pages, ~25 chunks) — not
+- Small, manually curated document set (5 pages, ~25 chunks), not
   live/real-time, and far from the full denhaag.nl site.
 - The confidence signal is a simple cosine-distance threshold on the
-  top retrieved chunk, not a calibrated confidence score — it can still be
+  top retrieved chunk, not a calibrated confidence score. It can still be
   fooled by a question that is *lexically* similar to a document but asks
   something the document doesn't actually answer.
-- No authentication, and no handling of real citizen data — this is a
+- No authentication, and no handling of real citizen data. This is a
   demo, not a production service.
 - English only; no Dutch-language support yet.
+- **No conversation memory.** Each question is retrieved and answered
+  independently, with no awareness of prior turns in the chat. This is a
+  deliberate scope decision for a v1 RAG demo, but it has a real, observed
+  failure mode: asking "Tax for me?" followed by "Only person, studio
+  apartment" causes the second message to be embedded and retrieved on its
+  own, with no link back to the tax context. It matched the *moving*
+  document instead of the *tax* document, since "studio apartment" and
+  "register" are lexically closer to that page. Fixing this would mean
+  passing the last 1-2 turns into the retrieval query and prompt, which is
+  a contained change but was left for a fast-follow rather than v1 scope.
 
 ## Future improvements
 
@@ -149,7 +165,7 @@ python eval/run_eval.py
 
 ## Demo video
 
-*(2-5 min — add link here once recorded)*
+*(2-5 min, add link here once recorded)*
 Shows 3 in-scope questions answered correctly with cited sources, plus 1
 out-of-scope question correctly declined.
 
@@ -190,7 +206,7 @@ streamlit run app.py
 Deploying to Streamlit Community Cloud: push this repo to GitHub, connect
 it at share.streamlit.io, add `GROQ_API_KEY` as a secret, and set the main
 file to `app.py`. Streamlit Cloud runs `ingest.py`'s dependencies fine out
-of the box since it has normal internet access — but note that `data/chroma`
+of the box since it has normal internet access, but note that `data/chroma`
 is not committed to the repo by default (it's a build artifact), so add a
 one-time build step or a Streamlit startup hook that runs `ingest.py` if
 `data/chroma` is empty.

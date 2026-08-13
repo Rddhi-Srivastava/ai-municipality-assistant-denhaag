@@ -29,24 +29,38 @@ regenerate the results table below.
 
 ## Results
 
-| # | Question | Expected | Actual | Correct? |
-|---|----------|----------|--------|----------|
-| 1 | Change of address | Answered | _run eval_ | |
-| 2 | 5-day reporting window | Answered | _run eval_ | |
-| 3 | Child moving report | Answered | _run eval_ | |
-| 4 | Parking permit documents | Answered | _run eval_ | |
-| 5 | 2nd car permit fee | Answered | _run eval_ | |
-| 6 | Passport appointment items | Answered | _run eval_ | |
-| 7 | Passport processing time | Answered | _run eval_ | |
-| 8 | Bulky waste - fridge | Answered | _run eval_ | |
-| 9 | Bulky waste size limits | Answered | _run eval_ | |
-| 10 | Waste tax, 2-person household | Answered | _run eval_ | |
-| 11 | Museum opening hours | Declined | _run eval_ | |
-| 12 | Naturalisation process | Declined | _run eval_ | |
-| 13 | OZB rate calculation | Declined | _run eval_ | |
-| 14 | Public transport refund | Declined | _run eval_ | |
-| 15 | Best neighbourhood (opinion) | Declined | _run eval_ | |
+Run on a fresh ingest, Groq `llama-3.3-70b-versatile`, distance threshold 0.75.
 
-**Headline stat (fill in after running):** X/10 in-scope answered correctly
-grounded in the right source, Y/5 out-of-scope correctly declined, 0
-hallucinated facts observed.
+| # | Question | Expected | Distance | Declined? | Correct? |
+|---|----------|----------|----------|-----------|----------|
+| 1 | Change of address | Answered | 0.510 | No | ✅ |
+| 2 | 5-day reporting window | Answered | 0.252 | No | ✅ |
+| 3 | Child moving report | Answered | 0.274 | No | ✅ |
+| 4 | Parking permit documents | Answered | 0.435 | No | ✅ |
+| 5 | 2nd car permit fee | Answered | 0.389 | No | ✅ |
+| 6 | Passport appointment items | Answered | 0.442 | No | ✅ |
+| 7 | Passport processing time | Answered | 0.381 | No | ✅ |
+| 8 | Bulky waste - fridge | Answered | 0.360 | No | ✅ |
+| 9 | Bulky waste size limits | Answered | 0.388 | No | ✅ |
+| 10 | Waste tax, 2-person household | Answered | 0.461 | No | ✅ |
+| 11 | Museum opening hours | Declined | 0.754 | Yes (distance) | ✅ |
+| 12 | Naturalisation process | Declined | 0.329 | Yes (LLM) | ✅ |
+| 13 | OZB rate calculation | Declined | 0.539 | Yes (LLM) | ✅ |
+| 14 | Public transport refund | Declined | 0.592 | Yes (LLM) | ✅ |
+| 15 | Best neighbourhood (opinion) | Declined | 0.778 | Yes (distance) | ✅ |
+
+**Headline stat: 15/15 (100%).** 10/10 in-scope questions answered
+correctly and grounded in the right source; 5/5 out-of-scope questions
+correctly declined; 0 hallucinated facts observed.
+
+**Notable finding:** the two hallucination defenses catch different failure
+modes. Questions 11 and 15 were declined by the *distance threshold* alone:
+nothing in the corpus was lexically close enough to even reach the LLM.
+Questions 12–14 had *low* distance (0.33–0.59, well under the 0.75
+threshold), meaning retrieval found topically-adjacent chunks, but the
+LLM itself declined because the retrieved context didn't actually answer
+the question (e.g. naturalisation is briefly mentioned on the "moving"
+page's navigation but never explained). This shows the prompt-level
+grounding rule is doing real, independent work beyond the similarity
+threshold. Without it, a topically-close-but-non-answering chunk could
+tempt the LLM into an unsupported answer.

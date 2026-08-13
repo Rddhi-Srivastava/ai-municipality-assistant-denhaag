@@ -1,5 +1,5 @@
 """
-app.py — Streamlit chat UI for the AI Municipality Assistant (Den Haag).
+app.py: Streamlit chat UI for the AI Municipality Assistant (Den Haag).
 
 Run locally:
     streamlit run app.py
@@ -9,6 +9,7 @@ Requires:
     - a Groq API key, either as the GROQ_API_KEY environment variable or
       entered in the sidebar (also works with Streamlit secrets when deployed)
 """
+
 import os
 import sys
 import subprocess
@@ -21,7 +22,7 @@ st.set_page_config(page_title="Den Haag Municipality Assistant", page_icon="🏛
 # exist yet since it's a build artifact and is gitignored. Build it once on
 # first launch so the app is usable without a manual ingest step.
 # Use sys.executable (not a bare "python") so the ingest script runs inside
-# the same virtual environment as the Streamlit app itself — otherwise the
+# the same virtual environment as the Streamlit app itself, otherwise the
 # subprocess can resolve to a different Python install that lacks chromadb.
 if not os.path.isdir(CHROMA_DIR) or not os.listdir(CHROMA_DIR):
     with st.spinner("First-time setup: building the document index..."):
@@ -38,7 +39,7 @@ st.title("🏛️ Den Haag Municipality Assistant")
 st.caption(
     "Ask about moving/address registration, parking permits, passports, "
     "waste collection, or municipal taxes. Answers are grounded only in "
-    "the ingested denhaag.nl pages — this is a portfolio demo, not an "
+    "the ingested denhaag.nl pages. This is a portfolio demo, not an "
     "official municipal service."
 )
 
@@ -48,7 +49,7 @@ with st.sidebar:
 
     if configured_key:
         # A key is already set via Streamlit secrets / environment. Never
-        # render it into a widget's value — Streamlit's password inputs have
+        # render it into a widget's value. Streamlit's password inputs have
         # a visible "reveal" eye icon, so a pre-filled real secret could be
         # read by anyone visiting the public app.
         api_key = configured_key
@@ -73,17 +74,25 @@ with st.sidebar:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+def render_sources(sources):
+    """Render retrieved source chunks. Snippets are shown with st.code()
+    (not st.markdown()) because the raw denhaag.nl text contains lines
+    starting with '-', which markdown would otherwise parse as bullet
+    lists, breaking the layout."""
+    for s in sources:
+        st.markdown(f"**{s['title']}** (similarity distance: {s['distance']})")
+        if s["url"]:
+            st.markdown(f"[{s['url']}]({s['url']})")
+        st.code(s["snippet"] + "...", language=None)
+        st.markdown("---")
+
+
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if msg["role"] == "assistant" and msg.get("sources"):
             with st.expander("📄 Sources used"):
-                for s in msg["sources"]:
-                    st.markdown(f"**{s['title']}** (similarity distance: {s['distance']})")
-                    if s["url"]:
-                        st.markdown(f"[{s['url']}]({s['url']})")
-                    st.markdown(f"> {s['snippet']}...")
-                    st.markdown("---")
+                render_sources(msg["sources"])
 
 question = st.chat_input("e.g. How do I register a change of address in Den Haag?")
 
@@ -114,12 +123,7 @@ if question:
             st.markdown(answer_text)
             if sources:
                 with st.expander("📄 Sources used"):
-                    for s in sources:
-                        st.markdown(f"**{s['title']}** (similarity distance: {s['distance']})")
-                        if s["url"]:
-                            st.markdown(f"[{s['url']}]({s['url']})")
-                        st.markdown(f"> {s['snippet']}...")
-                        st.markdown("---")
+                    render_sources(sources)
 
     st.session_state.messages.append(
         {"role": "assistant", "content": answer_text, "sources": sources}

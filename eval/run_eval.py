@@ -1,5 +1,5 @@
 """
-eval/run_eval.py — Runs the 15-question test set against the RAG pipeline
+eval/run_eval.py: Runs the 15-question test set against the RAG pipeline
 and prints a pass/fail summary. Requires ChromaDB to already be populated
 (run `python ingest.py` first) and a GROQ_API_KEY environment variable set.
 
