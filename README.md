@@ -5,6 +5,8 @@ questions using only official Den Haag municipality documents, and says
 "I don't know" rather than guessing when a question falls outside what it's
 been given.
 
+**Live demo: https://ai-municipality-assistant-denhaag.streamlit.app/**
+
 ![Architecture diagram](architecture-diagram.svg)
 
 ---
@@ -165,9 +167,7 @@ python eval/run_eval.py
 
 ## Demo video
 
-*(2-5 min, add link here once recorded)*
-Shows 3 in-scope questions answered correctly with cited sources, plus 1
-out-of-scope question correctly declined.
+*(Video coming soon)*
 
 ## Repository structure
 
@@ -201,15 +201,15 @@ streamlit run app.py
 
 ## Live deployment
 
-*(add your Streamlit Community Cloud / Hugging Face Spaces link here once deployed)*
+**Try it live: https://ai-municipality-assistant-denhaag.streamlit.app/**
 
-Deploying to Streamlit Community Cloud: push this repo to GitHub, connect
+Deployed on Streamlit Community Cloud: push this repo to GitHub, connect
 it at share.streamlit.io, add `GROQ_API_KEY` as a secret, and set the main
 file to `app.py`. Streamlit Cloud runs `ingest.py`'s dependencies fine out
 of the box since it has normal internet access, but note that `data/chroma`
-is not committed to the repo by default (it's a build artifact), so add a
-one-time build step or a Streamlit startup hook that runs `ingest.py` if
-`data/chroma` is empty.
+is not committed to the repo by default (it's a build artifact), so
+`app.py` includes a first-run check that builds the index automatically on
+first launch if `data/chroma` is empty.
 
 ## Data sources
 
