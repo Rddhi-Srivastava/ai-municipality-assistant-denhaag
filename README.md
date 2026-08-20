@@ -6,6 +6,7 @@ questions using only official Den Haag municipality documents, and says
 been given.
 
 **Live demo: https://ai-municipality-assistant-denhaag.streamlit.app/**
+
 **Demo video: https://youtu.be/H3zBfyxxidE**
 
 ![Architecture diagram](architecture-diagram.svg)
